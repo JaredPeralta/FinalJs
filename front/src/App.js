@@ -12,6 +12,7 @@ const App = () => {
     .then(res => res.json()) 
     .then(data => {
       setDatos(data);
+      console.log(data.estudiantes);
     }); 
   }, []);
 
@@ -43,10 +44,10 @@ const App = () => {
       <button onClick={add}>Add</button>
 
       {datos ? 
-        datos.map(item => (
-          <div key={item.id}>
+        datos.estudiantes.map(item => (
+          <div key={item.codigo}>
             <h2>{`Estudiante: ${item.nombre}`}</h2>
-            <p>{`Id: ${item.id}`}</p>
+            <p>{`Id: ${item.codigo}`}</p>
           </div>
         ))
       : <h1>Cargando...</h1>}
