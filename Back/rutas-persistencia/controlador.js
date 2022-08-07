@@ -1,16 +1,13 @@
 let fs = require("fs")
 
 let control = {
-    crearUsuario: function(req, res){
+    crearEstudiante: function (req, res) {
         //#region paso a paso
-        
-        // let usuarios = fs.readFileSync("usuarios.json", "utf8"); //Ruta relativa desde el index.js
-        // let usuariosJson = JSON.parse(usuarios.estudiantes); // Convierte la lectura del archivo (texto) a un objeto
         let usuarios = require("../usuarios.json") // ruta relativa desde este archivo
         let resultado = usuarios;
 
         let nuevoUsuario = {
-            codigo: resultado.estudiantes[resultado.estudiantes.length-1].codigo + 1,
+            codigo: resultado.estudiantes[resultado.estudiantes.length - 1].codigo + 1,
             nombre: req.body.nombre,
             apellido: req.body.apellido,
             materias: []
@@ -31,9 +28,8 @@ let control = {
                 })
             }
         });
-        /* */
         //#endregion
- 
+
         //#region directo
         /*
         let usuarios = JSON.parse(fs.readFileSync("usuarios.json", "utf8") );
@@ -60,44 +56,44 @@ let control = {
         //#endregion
 
     },
-    mostrarUsuarios: function(req, res){
+    mostrarEstudiantes: function (req, res) {
         let usuarios = require("../usuarios.json") // ruta relativa desde este archivo
         let resultado = usuarios;
-        if(resultado.length != 0){
-            res.json(resultado.estudiantes); 
+        if (resultado.length != 0) {
+            res.json(resultado.estudiantes);
         }
-        else{
+        else {
             res.status(404).send({
                 mensaje: "no se encontró el usuario"
             })
         }
     },
-    buscarUsuarios: function(req, res){
+    buscarUsuarios: function (req, res) {
         let usuarios = require("../usuarios.json") // ruta relativa desde este archivo
         let id = req.query.id;
-        let resultado = usuarios.filter( (usuario) => usuario.id == id )
+        let resultado = usuarios.filter((usuario) => usuario.id == id)
 
-        if(resultado.length != 0){
+        if (resultado.length != 0) {
             res.status(200).send({
                 encontrados: resultado
             })
         }
-        else{
+        else {
             res.status(404).send({
                 mensaje: "no se encontró el usuario"
             })
         }
     },
-    actualizarUsuario: function(req, res){
+    actualizarEstudiante: function (req, res) {
         let codigo = req.body.codigo;
         let usuarios = require("../usuarios.json") // ruta relativa desde este archivo
         let resultado = usuarios;
 
         let encontrado = false;
-        
-        
-        usuarios.estudiantes.map((usuario)=>{
-            if(usuario.codigo == codigo){
+
+
+        usuarios.estudiantes.map((usuario) => {
+            if (usuario.codigo == codigo) {
                 usuario.nombre = req.body.nombre;
                 usuario.apellido = req.body.apellido;
                 encontrado = true;
@@ -105,9 +101,7 @@ let control = {
             return usuario
         })
 
-        //let usuariosMod = JSON.stringify(usuarios, null, 4)
-
-        if(encontrado){
+        if (encontrado) {
             fs.writeFile('usuarios.json', JSON.stringify(usuarios, null, 4), 'utf8', (err) => {
                 if (err) {
                     res.status(500).send({
@@ -125,24 +119,24 @@ let control = {
                 mensaje: "El usuario no existe"
             })
         }
-        
+
     },
-    eliminarUsuario: function(req, res){
+    eliminarEstudiante: function (req, res) {
         let codigo = req.body.codigo;
         let usuarios = require("../usuarios.json");
 
         let encontrado = false
         usuarios.estudiantes = usuarios.estudiantes.filter(usuario => {
-            if(usuario.codigo != codigo){
+            if (usuario.codigo != codigo) {
                 return true;
             }
-            else{
+            else {
                 encontrado = true;
                 return false;
             }
         })
 
-        if(encontrado){
+        if (encontrado) {
             fs.writeFile('usuarios.json', JSON.stringify(usuarios, null, 4), 'utf8', (err) => {
                 if (err) {
                     res.status(500).send({
@@ -160,8 +154,6 @@ let control = {
                 mensaje: "El usuario no existe"
             })
         }
-
-
     }
 
 }

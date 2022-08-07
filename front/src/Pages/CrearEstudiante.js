@@ -1,19 +1,20 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CrearEstudiante = () => {
-  const [datos, setDatos] = useState(null);
+  const [estudiantes, setEstudiantes] = useState([]);
   const [name, setName] = useState('');
   const [apellido, setApellido] = useState('');
+  //let navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/musuario') 
-    .then(res => res.json()) 
-    .then(data => {
-      setDatos(data);
-      console.log(data);
-    }); 
+    fetch('http://localhost:5000/api/mestudiante')
+      .then(res => res.json())
+      .then(data => {
+        setEstudiantes(data);
+        console.log(data);
+      });
   }, []);
 
   const handleChangeNombre = (e) => {
@@ -25,7 +26,7 @@ const CrearEstudiante = () => {
   }
 
   const add = () => {
-    fetch('http://localhost:5000/api/usuario', {
+    fetch('http://localhost:5000/api/estudiante', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -35,11 +36,12 @@ const CrearEstudiante = () => {
         apellido: apellido
       })
     })
+    window.location.reload()
   }
 
   const handleDelete = (id) => {
-    console.log(id);
-    fetch('http://localhost:5000/api/usuario', {
+    //console.log(id);
+    fetch('http://localhost:5000/api/estudiante', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -47,7 +49,8 @@ const CrearEstudiante = () => {
       body: JSON.stringify({
         codigo: parseInt(id),
       })
-    })
+    });
+    window.location.reload()
   }
 
   return (
@@ -57,38 +60,38 @@ const CrearEstudiante = () => {
       <button onClick={add}>Add</button>
 
       <table border="1">
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Name</th>
-              <th>Apellido</th>
-              <th>Materias</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {datos ? 
-              datos.map(estudiantes => {
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Apellido</th>
+            <th>Materias</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {estudiantes ?
+            estudiantes.map(estudiante => {
               return (
-                <tr key={estudiantes.codigo}>
-                  <td>{estudiantes.codigo}</td>
-                  <td>{estudiantes.nombre}</td>
-                  <td>{estudiantes.apellido}</td>
-                  <td>{estudiantes.materias.map(mat => {
+                <tr key={estudiante.codigo}>
+                  <td>{estudiante.codigo}</td>
+                  <td>{estudiante.nombre}</td>
+                  <td>{estudiante.apellido}</td>
+                  <td>{estudiante.materias.map(mat => {
                     return (
-                      <p>{mat.id}</p>
+                      <span>{mat.id} </span>
                     )
                   })}</td>
                   <td>
-                    <Link to={{pathname: `/estudiantes/${estudiantes.codigo}`}}><button>Editar</button></Link>
-                    <button onClick={() => handleDelete(estudiantes.codigo)}>Eliminar</button>
+                    <Link to={{ pathname: `/estudiantes/${estudiante.codigo}` }}><button>Editar</button></Link>
+                    <button onClick={() => handleDelete(estudiante.codigo)}>Eliminar</button>
                   </td>
                 </tr>
               );
             })
             : <h1>Cargando...</h1>}
-          </tbody>
-        </table>
+        </tbody>
+      </table>
     </div>
   )
 }

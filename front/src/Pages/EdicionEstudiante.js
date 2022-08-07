@@ -1,8 +1,9 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState } from 'react';
 
 const EdicionEstudiante = () => {
+  let navigate = useNavigate();
   let params = useParams();
   const [name, setName] = useState('');
   const [apellido, setApellido] = useState('');
@@ -16,7 +17,7 @@ const EdicionEstudiante = () => {
   }
 
   const handleEdit = () => {
-    fetch('http://localhost:5000/api/usuario/', {
+    fetch('http://localhost:5000/api/estudiante/', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -27,6 +28,7 @@ const EdicionEstudiante = () => {
         apellido: apellido
       })
     })
+    navigate("/estudiantes", { replace: true });
   }
 
   return (
