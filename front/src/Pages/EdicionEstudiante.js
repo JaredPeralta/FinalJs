@@ -1,12 +1,24 @@
 import React from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const EdicionEstudiante = () => {
   let navigate = useNavigate();
   let params = useParams();
   const [name, setName] = useState('');
   const [apellido, setApellido] = useState('');
+
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/estudiante?codigo=${params.id}`)
+      .then(res => res.json())
+      .then(data => {
+        setName(data.nombre);
+        setApellido(data.apellido);
+        console.log(data.nombre);
+        console.log("Hola "+ name);
+      }
+      );
+  } , []);
 
   const handleChangeNombre = (e) => {
     setName(e.target.value);
@@ -35,7 +47,7 @@ const EdicionEstudiante = () => {
     <div>
       <p>Nombre: <input onChange={handleChangeNombre}></input></p>
       <p>Apellido: <input onChange={handleChangeApellido}></input></p>
-      <button onClick={handleEdit}>Add</button>
+      <button onClick={handleEdit}>Actualizar Estudiante</button>
     </div>
   )
 }

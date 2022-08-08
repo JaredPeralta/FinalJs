@@ -57,13 +57,13 @@ const CrearEstudiante = () => {
     <div>
       <p>Nombre: <input onChange={handleChangeNombre}></input></p>
       <p>Apellido: <input onChange={handleChangeApellido}></input></p>
-      <button onClick={add}>Add</button>
+      <button onClick={add}>Agregar</button>
 
       <table border="1">
         <thead>
           <tr>
             <th>Id</th>
-            <th>Name</th>
+            <th>Nombre</th>
             <th>Apellido</th>
             <th>Materias</th>
             <th>Acciones</th>
@@ -79,7 +79,7 @@ const CrearEstudiante = () => {
                   <td>{estudiante.apellido}</td>
                   <td>{estudiante.materias.map(mat => {
                     return (
-                      <span>{mat.id} </span>
+                      <span key={mat.id}>{mat.id} </span>
                     )
                   })}</td>
                   <td>
