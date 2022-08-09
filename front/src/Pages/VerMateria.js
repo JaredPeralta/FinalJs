@@ -149,6 +149,7 @@ const VerMateria = () => {
   return (
     <div>
       <NavBar />
+      <h3>Agregar estudiante:</h3>
       <p>Id estudiante: <input onChange={handleChangeId}></input></p>
       {materia.tipo === "t" ?
         <>

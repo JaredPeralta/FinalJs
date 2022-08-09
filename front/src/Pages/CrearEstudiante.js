@@ -112,6 +112,7 @@ const CrearEstudiante = () => {
   return (
     <div>
       <NavBar />
+      <h3>Agregar estudiante:</h3>
       <p>Nombre: <input onChange={handleChangeNombre}></input></p>
       <p>Apellido: <input onChange={handleChangeApellido}></input></p>
       <Button onClick={add}>Agregar</Button>

@@ -66,6 +66,7 @@ const CrearMateria = () => {
   return (
     <div>
       <NavBar />
+      <h3>Crear Materia:</h3>
       <p>Nombre: <input onChange={handleChangeNombre}></input></p>
       <p>Creditos: <input onChange={handleChangeCreditos}></input></p>
       <p>Tipo: <input onChange={handleChangeTipo}></input></p>
