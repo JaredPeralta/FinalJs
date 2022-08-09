@@ -12,8 +12,11 @@ const VerMateria = () => {
   const [nota2, setNota2] = useState('');
   const [nota3, setNota3] = useState('');
   const [notaLab, setNotaLab] = useState('');
+  const [estMenor3, setEstMenor3] = useState([]);
+  const [mostrarEst3, setMostrarEst3] = useState(false);
+  const [estMejorNota, setEstMejorNota] = useState([]);
+  const [mostrarEstMejorNota, setMostrarEstMejorNota] = useState(false);
 
-  //console.log(params.id);
   useEffect(() => {
     fetch(`http://localhost:5000/api/materia?id=${params.id}`)
       .then(res => res.json())
@@ -21,9 +24,12 @@ const VerMateria = () => {
         setRespuesta(data);
         setMateria(data[0]);
         setEstudiantes(data[1]);
+        setEstMenor3(data[2]);
+        setEstMejorNota(data[3]);
         //console.log(data);
-        console.log(data[0]);
-        console.log(data[1]);
+        //console.log(data[0]);
+        //console.log(data[1]);
+        //console.log(data[3]);
       });
   }, []);
 
@@ -44,21 +50,22 @@ const VerMateria = () => {
   }
 
   const addEstudiante = () => {
-    if(notaLab === ''){
-    fetch('http://localhost:5000/api/aemateria', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        codigoMateria: parseInt(params.id),
-        codigo: parseInt(id),
-        nota1: parseFloat(nota1),
-        nota2: parseFloat(nota2),
-        nota3: parseFloat(nota3),
-        info: "t"
+    if (notaLab === '') {
+      fetch('http://localhost:5000/api/aemateria', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          codigoMateria: parseInt(params.id),
+          codigo: parseInt(id),
+          nota1: parseFloat(nota1),
+          nota2: parseFloat(nota2),
+          nota3: parseFloat(nota3),
+          info: "t"
+        })
       })
-    })}else{
+    } else {
       fetch('http://localhost:5000/api/aemateria', {
         method: 'POST',
         headers: {
@@ -75,6 +82,12 @@ const VerMateria = () => {
         })
       })
     }
+    fetch('http://localhost:5000/api/promedioestudiante', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
   const handleDelete = (id) => {
@@ -89,15 +102,27 @@ const VerMateria = () => {
         codigoMateria: parseInt(params.id),
       })
     });
+    fetch('http://localhost:5000/api/promedioestudiante', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
     window.location.reload()
   }
 
-  
+  const handleMostrarEstMenor3 = () => {
+    setMostrarEst3(true);
+  }
+
+  const handleMostrarEstMejorNota = () => {
+    setMostrarEstMejorNota(true);
+  }
 
   return (
     <div>
       <p>Id estudiante: <input onChange={handleChangeId}></input></p>
-      {materia.tipo === "t" ? 
+      {materia.tipo === "t" ?
         <>
           <p>Nota 1: <input onChange={handleChangeNota1}></input></p>
           <p>Nota 2: <input onChange={handleChangeNota2}></input></p>
@@ -155,18 +180,78 @@ const VerMateria = () => {
                   <td>
                     {materia.estudiantesInscritos.map(mat => {
                       if (mat.codigo === estudiante.codigo) {
-                          return (<p>{mat.notaF}</p>)
-                        }
+                        return (<p>{mat.notaF}</p>)
+                      }
                     })}
                   </td>
                   <td>
-                  <Link to={{ pathname: `/materias/modificar/${materia.id}/${estudiante.codigo}` }}><button>Modificar Notas</button></Link>
-                  <button onClick={() => handleDelete(estudiante.codigo)}>Eliminar</button>
+                    <Link to={{ pathname: `/materias/modificar/${materia.id}/${estudiante.codigo}` }}><button>Modificar Notas</button></Link>
+                    <button onClick={() => handleDelete(estudiante.codigo)}>Eliminar</button>
                   </td>
                 </tr>
               );
             })
             : <h1>Cargando...</h1>}
+        </tbody>
+      </table>
+      <br/>
+      <br/>
+      <button onClick={handleMostrarEstMenor3}>Mostrar Estudiantes con nota menor a 3.0</button>
+      <table border="1">
+        <thead>
+          <tr>
+            <th colSpan="4">Estudiantes con nota menor a 3.0</th>
+          </tr>
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Nota Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mostrarEst3 ?
+            estMenor3.map(estudiante => {
+              return (
+                <tr key={estudiante.codigo}>
+                  <td>{estudiante.codigo}</td>
+                  <td>{estudiante.nombre}</td>
+                  <td>{estudiante.apellido}</td>
+                  <td>{estudiante.notaFinal}</td>
+                </tr>
+              )
+            })
+            : null}
+        </tbody>
+      </table>
+      <br/>
+      <br/>
+      <button onClick={handleMostrarEstMejorNota}>Estudiantes ordenados por mejor nota</button>
+      <table border="1">
+        <thead>
+          <tr>
+            <th colSpan="4">Estudiantes ordenados por mejor nota</th>
+          </tr>
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Nota Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mostrarEstMejorNota ?
+            estMejorNota.map(estudiante => {
+              return (
+                <tr key={estudiante.codigo}>
+                  <td>{estudiante.codigo}</td>
+                  <td>{estudiante.nombre}</td>
+                  <td>{estudiante.apellido}</td>
+                  <td>{estudiante.notaFinal}</td>
+                </tr>
+              )
+            })
+            : null}
         </tbody>
       </table>
     </div>

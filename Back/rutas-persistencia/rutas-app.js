@@ -15,6 +15,8 @@ router.post("/estudiante", controlador.crearEstudiante)
 router.get("/estudiante", controlador.buscarEstudiantes)
 router.put("/estudiante", controlador.actualizarEstudiante)
 router.delete("/estudiante", controlador.eliminarEstudiante)
+router.get("/promedioestudiante", controlador.calcularPromedioPonderado)
+router.get("/mejorpromedioestudiante", controlador.mostrarEstudiantesMejorPromedio)
 
 // Rutas Materias
 router.get("/mmaterias", controlador.mostrarMaterias)
@@ -25,5 +27,9 @@ router.get("/materia", controlador.buscarMateria)
 router.post("/aemateria", controlador.agregarEstudianteMateria)
 router.delete("/eemateria", controlador.eliminarEstudianteMateria)
 router.put("/mnemateria", controlador.actualizarNotasEstudiante)
+
+
+//Rutas Backup
+router.get("/backup", controlador.cargarDatosExistentes)
 
 module.exports = router

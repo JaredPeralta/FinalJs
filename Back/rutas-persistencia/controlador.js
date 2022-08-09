@@ -1,5 +1,4 @@
 let fs = require("fs");
-const { Z_DEFAULT_COMPRESSION } = require("zlib");
 
 let control = {
   crearEstudiante: function (req, res) {
@@ -11,7 +10,8 @@ let control = {
       codigo: resultado.estudiantes[resultado.estudiantes.length - 1].codigo + 1,
       nombre: req.body.nombre,
       apellido: req.body.apellido,
-      materias: []
+      materias: [],
+      promedioPonderado: 0
     };
     resultado.estudiantes.push(nuevoUsuario);
 
@@ -311,6 +311,14 @@ let control = {
     let estudiantes = datos.estudiantes;
     let estudiantesInscritos = [];
     let respuesta = [];
+    let estudiantesNotaMenor3 = [];
+    let estudianteNota = {
+      codigo: 0,
+      nombre: "",
+      apellido: "",
+      notaFinal: 0,
+    };
+    let estOrdenadosMejorNota = [];
 
     let encontrado = false;
     resultado.materias.map(materia => {
@@ -319,13 +327,43 @@ let control = {
         materia.estudiantesInscritos.map(estudiante => {
           estudiantes.map(estudiante2 => {
             if (estudiante.codigo == estudiante2.codigo) {
+              estudianteNota.codigo = estudiante2.codigo;
+              estudianteNota.nombre = estudiante2.nombre;
+              estudianteNota.apellido = estudiante2.apellido;
+              estudianteNota.notaFinal = estudiante.notaF;
+              estOrdenadosMejorNota.push(estudianteNota);
+              estudianteNota = {
+                codigo: 0,
+                nombre: "",
+                apellido: "",
+                notaFinal: 0,
+              };
               estudiantesInscritos.push(estudiante2);
+              if (estudiante.notaF < 3.0) {
+                estudianteNota.codigo = estudiante2.codigo;
+                estudianteNota.nombre = estudiante2.nombre;
+                estudianteNota.apellido = estudiante2.apellido;
+                estudianteNota.notaFinal = estudiante.notaF;
+                estudiantesNotaMenor3.push(estudianteNota);
+                estudianteNota = {
+                  codigo: 0,
+                  nombre: "",
+                  apellido: "",
+                  notaFinal: 0,
+                };
+              }
             }
           })
         })
-        //console.log(estudiantesInscritos);
+        //Ordenar estOrdenadosMejorNota por nota final
+        estOrdenadosMejorNota.sort(function (a, b) {
+          return b.notaFinal - a.notaFinal;
+        });
+        console.log(estOrdenadosMejorNota);
         respuesta.push(materia);
         respuesta.push(estudiantesInscritos);
+        respuesta.push(estudiantesNotaMenor3);
+        respuesta.push(estOrdenadosMejorNota);
         res.json(respuesta);
       }
     })
@@ -366,31 +404,33 @@ let control = {
             })
             if (!boolEstInscrito) {
               if (tipoMateria == "t") {
-                let notaFinal = nota1*0.35 + nota2*0.35 + nota3*0.3;
+                let notaFinal = nota1 * 0.35 + nota2 * 0.35 + nota3 * 0.3;
+                var notaFinalRedondeada = Math.round((notaFinal + Number.EPSILON) * 100) / 100;
                 nuevoEstudiante = {
                   codigo: codigoEstudiante,
                   nota1: nota1,
                   nota2: nota2,
                   nota3: nota3,
-                  notaF: notaFinal
+                  notaF: notaFinalRedondeada
                 }
-              }else{
+              } else {
                 let notaLab = req.body.notaLab;
-                let notaFinal = nota1*0.30 + nota2*0.25 + nota3*0.20 + notaLab*0.25;
+                let notaFinal = nota1 * 0.30 + nota2 * 0.25 + nota3 * 0.20 + notaLab * 0.25;
+                var notaFinalRedondeada = Math.round((notaFinal + Number.EPSILON) * 100) / 100;
                 nuevoEstudiante = {
                   codigo: codigoEstudiante,
                   nota1: nota1,
                   nota2: nota2,
                   nota3: nota3,
                   notaLab: notaLab,
-                  notaF: notaFinal
+                  notaF: notaFinalRedondeada
                 }
               }
             }
             materia.estudiantesInscritos.push(nuevoEstudiante);
           }
         })
-        if(!boolEstInscrito){
+        if (!boolEstInscrito) {
           nuevaMateria = {
             id: codigoMateria
           }
@@ -433,7 +473,7 @@ let control = {
     let encontrado = false;
     let encontrado2 = false;
     datos.materias.map(materia => {
-      if(materia.id == codigoMateria){
+      if (materia.id == codigoMateria) {
         let contador = 0;
         console.log(materia.id);
         materia.estudiantesInscritos.map((estudianteInscrito) => {
@@ -494,12 +534,14 @@ let control = {
             estudianteInscrito.nota2 = req.body.nota2;
             estudianteInscrito.nota3 = req.body.nota3;
             if (tipoMateria == "t") {
-              let notaFinal = estudianteInscrito.nota1*0.35 + estudianteInscrito.nota2*0.35 + estudianteInscrito.nota3*0.3;
-              estudianteInscrito.notaF = notaFinal;
-            }else{
+              let notaFinal = estudianteInscrito.nota1 * 0.35 + estudianteInscrito.nota2 * 0.35 + estudianteInscrito.nota3 * 0.3;
+              var notaFinalRedondeada = Math.round((notaFinal + Number.EPSILON) * 100) / 100;
+              estudianteInscrito.notaF = notaFinalRedondeada;
+            } else {
               estudianteInscrito.notaLab = req.body.notaLab;
-              let notaFinal = estudianteInscrito.nota1*0.30 + estudianteInscrito.nota2*0.25 + estudianteInscrito.nota3*0.20 + estudianteInscrito.notaLab*0.25;
-              estudianteInscrito.notaF = notaFinal;
+              let notaFinal = estudianteInscrito.nota1 * 0.30 + estudianteInscrito.nota2 * 0.25 + estudianteInscrito.nota3 * 0.20 + estudianteInscrito.notaLab * 0.25;
+              var notaFinalRedondeada = Math.round((notaFinal + Number.EPSILON) * 100) / 100;
+              estudianteInscrito.notaF = notaFinalRedondeada;
             }
             console.log(estudianteInscrito);
             modificado = true;
@@ -526,6 +568,81 @@ let control = {
         mensaje: "El usuario no existe"
       })
     }
+  },
+  cargarDatosExistentes: function (req, res) {
+    let datosExistentes = require("../datosPrecargados.json");
+    fs.writeFile('datos.json', JSON.stringify(datosExistentes, null, 4), 'utf8', (err) => {
+      if (err) {
+        res.status(500).send({
+          mensaje: "Error al cargar los datos"
+        })
+      } else {
+        console.log("Datos cargados");
+        res.status(200).send({
+          mensaje: "Datos cargados"
+        })
+      }
+    })
+  },
+  calcularPromedioPonderado: function (req, res) {
+    let datos = require("../datos.json");
+    let estudiantes = datos.estudiantes;
+    let materias = datos.materias;
+    let creditos = 0;
+    let promedio = 0;
+    estudiantes.map(estudiante => {
+      if (estudiante.materias.length > 0) {
+        estudiante.materias.map((materia) => {
+          materias.map((materia2) => {
+            if (materia.id == materia2.id) {
+              materia2.estudiantesInscritos.map((estudianteInscrito) => {
+                if (estudianteInscrito.codigo == estudiante.codigo) {
+                  promedio = promedio + estudianteInscrito.notaF * materia2.creditos;
+                  creditos = creditos + materia2.creditos;
+                }
+              })
+            }
+          })
+        })
+
+        var notaPromedioRedondeado = Math.round((promedio / creditos + Number.EPSILON) * 100) / 100;
+        estudiante.promedioPonderado = notaPromedioRedondeado;
+        promedio = 0;
+        creditos = 0;
+      } else {
+        estudiante.promedioPonderado = 0.0;
+      }
+    })
+
+    datos.estudiantes = estudiantes;
+
+    fs.writeFile('datos.json', JSON.stringify(datos, null, 4), 'utf8', (err) => {
+      if (err) {
+        res.status(500).send({
+          mensaje: "Error al actualizar notas del estudiante"
+        })
+      } else {
+        console.log("Notas actualizadas");
+        res.status(200).send({
+          mensaje: "Notas actualizadas"
+        })
+      }
+    });
+  },
+  mostrarEstudiantesMejorPromedio: function (req, res) {
+    let datos = require("../datos.json");
+    let estudiantes = datos.estudiantes;
+    let estudiantesMejorPromedio = [];
+    estudiantes.map(estudiante => {
+      estudiantesMejorPromedio.push(estudiante);
+    })
+    estudiantesMejorPromedio.sort(function (a, b) {
+      return b.promedioPonderado - a.promedioPonderado;
+    });
+    console.log(estudiantesMejorPromedio);
+    let estudiantesMejorPromedio10 = estudiantesMejorPromedio.slice(0, 10);
+    console.log(estudiantesMejorPromedio10);
+    res.json(estudiantesMejorPromedio10);
   }
 
 }

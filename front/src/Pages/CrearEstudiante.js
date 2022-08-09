@@ -6,6 +6,8 @@ const CrearEstudiante = () => {
   const [estudiantes, setEstudiantes] = useState([]);
   const [name, setName] = useState('');
   const [apellido, setApellido] = useState('');
+  const [estMejorProm, setEstMejorProm] = useState([]);
+  const [estSinMaterias, setEstSinMaterias] = useState([]);
   //let navigate = useNavigate();
 
   useEffect(() => {
@@ -53,6 +55,40 @@ const CrearEstudiante = () => {
     window.location.reload()
   }
 
+  const handleMostrarEsMeProm = () => {
+    fetch('http://localhost:5000/api/promedioestudiante', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    fetch('http://localhost:5000/api/mejorpromedioestudiante', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setEstMejorProm(data);
+        console.log(data);
+      });
+  }
+
+  const handleMostrarEstSinMaterias = () => {
+    fetch('http://localhost:5000/api/mestudiante', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setEstSinMaterias(data);
+        console.log(data);
+      }).catch(err => console.log(err));
+  }
+
   return (
     <div>
       <p>Nombre: <input onChange={handleChangeNombre}></input></p>
@@ -88,6 +124,65 @@ const CrearEstudiante = () => {
                   </td>
                 </tr>
               );
+            })
+            : <h1>Cargando...</h1>}
+        </tbody>
+      </table>
+      <br/>
+      <br/>
+      <button onClick={handleMostrarEsMeProm}>Mostrar 10 mejores promedios</button>
+      <table border="1">
+        <thead>
+          <tr>
+            <th colSpan="4">Estudiantes con mejor promedio</th>
+          </tr>
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Promedio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {estMejorProm ?
+            estMejorProm.map(estudiante => {
+              return (
+                <tr key={estudiante.codigo}>
+                  <td>{estudiante.codigo}</td>
+                  <td>{estudiante.nombre}</td>
+                  <td>{estudiante.apellido}</td>
+                  <td>{estudiante.promedioPonderado}</td>
+                </tr>
+              );
+            })
+            : <h1>Cargando...</h1>}
+        </tbody>
+      </table>
+      <br/>
+      <br/>
+      <button onClick={handleMostrarEstSinMaterias}>Mostrar estudiantes sin materias</button>
+      <table border="1">
+        <thead>
+          <tr>
+            <th colSpan="4">Estudiantes sin materias inscritas</th>
+          </tr>
+          <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+          </tr>
+        </thead>
+        <tbody>
+          {estSinMaterias ?
+            estSinMaterias.map(estudiante => {
+              if(estudiante.materias.length === 0){
+              return (
+                <tr key={estudiante.codigo}>
+                  <td>{estudiante.codigo}</td>
+                  <td>{estudiante.nombre}</td>
+                  <td>{estudiante.apellido}</td>
+                </tr>
+              )}
             })
             : <h1>Cargando...</h1>}
         </tbody>

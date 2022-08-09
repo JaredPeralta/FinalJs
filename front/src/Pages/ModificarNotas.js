@@ -82,6 +82,12 @@ const ModificarNotas = () => {
           })
         })
       }
+      fetch('http://localhost:5000/api/promedioestudiante', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
   }
 
   return (
@@ -104,7 +110,7 @@ const ModificarNotas = () => {
                     <p>Nota 3: <input value={nota3 ? nota3 : estudiante.nota3} onChange={handleChangeNota3}></input></p>
                     <p>Nota Lab: <input value={notaLab ? notaLab : estudiante.notaLab} onChange={handleChangeNotaLab}></input></p>
                   </>}
-                <button onClick={handleChangeNotas}>Agregar Estudiante a Materia</button>
+                <button onClick={handleChangeNotas}>Modificar Notas</button>
               </div>
             )
           }
