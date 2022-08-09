@@ -1,18 +1,48 @@
 {
     "materias": [
         {
-            "id": 2,
-            "nombre": "Programacion",
+            "id": 1,
+            "nombre": "Matematicas",
             "creditos": 4,
-            "tipo": "teorico-practico",
+            "tipo": "t",
             "estudiantesInscritos": [
                 {
                     "codigo": 1,
-                    "nota": "10"
+                    "nota1": 3.2,
+                    "nota2": 5,
+                    "nota3": 5,
+                    "notaF": 0
                 },
                 {
                     "codigo": 2,
-                    "nota": "10"
+                    "nota1": 1,
+                    "nota2": 2,
+                    "nota3": 3,
+                    "notaF": 0
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "nombre": "Programacion",
+            "creditos": 4,
+            "tipo": "tp",
+            "estudiantesInscritos": [
+                {
+                    "codigo": 1,
+                    "nota1": 2,
+                    "nota2": 3,
+                    "nota3": 4,
+                    "notaLab": 5,
+                    "notaF": 3.5
+                },
+                {
+                    "codigo": 2,
+                    "nota1": 1,
+                    "nota2": 2,
+                    "nota3": 3,
+                    "notaLab": 5,
+                    "notaF": 4.2
                 }
             ]
         },
@@ -20,15 +50,21 @@
             "id": 3,
             "nombre": "Ingles",
             "creditos": 3,
-            "tipo": "teorico",
+            "tipo": "t",
             "estudiantesInscritos": [
                 {
                     "codigo": 1,
-                    "nota": "10"
+                    "nota1": 5,
+                    "nota2": 5,
+                    "nota3": 5,
+                    "notaF": 0
                 },
                 {
                     "codigo": 2,
-                    "nota": "10"
+                    "nota1": 1,
+                    "nota2": 2,
+                    "nota3": 3,
+                    "notaF": 0
                 }
             ]
         },
@@ -36,15 +72,21 @@
             "id": 4,
             "nombre": "Historia",
             "creditos": 3,
-            "tipo": "teorico",
+            "tipo": "t",
             "estudiantesInscritos": [
                 {
                     "codigo": 1,
-                    "nota": "10"
+                    "nota1": 5,
+                    "nota2": 5,
+                    "nota3": 5,
+                    "notaF": 0
                 },
                 {
                     "codigo": 2,
-                    "nota": "10"
+                    "nota1": 1,
+                    "nota2": 2,
+                    "nota3": 3,
+                    "notaF": 0
                 }
             ]
         },
@@ -52,11 +94,15 @@
             "id": 5,
             "nombre": "Fisica",
             "creditos": 3,
-            "tipo": "teorico-practico",
+            "tipo": "tp",
             "estudiantesInscritos": [
                 {
                     "codigo": 1,
-                    "nota": "10"
+                    "nota1": 3.2,
+                    "nota2": 5,
+                    "nota3": 5,
+                    "notaLab": 1,
+                    "notaF": 0
                 }
             ]
         },
@@ -64,11 +110,23 @@
             "id": 6,
             "nombre": "Quimica",
             "creditos": 3,
-            "tipo": "teorico-practico",
+            "tipo": "tp",
             "estudiantesInscritos": [
                 {
                     "codigo": 2,
-                    "nota": "10"
+                    "nota1": 1,
+                    "nota2": 2,
+                    "nota3": 3,
+                    "notaLab": 1,
+                    "notaF": 0
+                },
+                {
+                    "codigo": 3,
+                    "nota1": 3.8,
+                    "nota2": 3.9,
+                    "nota3": 4.7,
+                    "notaLab": 2.9,
+                    "notaF": 3.78
                 }
             ]
         }
@@ -93,9 +151,6 @@
                 },
                 {
                     "id": 5
-                },
-                {
-                    "id": 6
                 }
             ]
         },
@@ -117,8 +172,15 @@
                     "id": 4
                 },
                 {
-                    "id": 5
-                },
+                    "id": 6
+                }
+            ]
+        },
+        {
+            "codigo": 3,
+            "nombre": "Jared",
+            "apellido": "Peralta",
+            "materias": [
                 {
                     "id": 6
                 }
@@ -126,8 +188,8 @@
         },
         {
             "codigo": 4,
-            "nombre": "Jared",
-            "apellido": "Peralta",
+            "nombre": "Camilo",
+            "apellido": "Mendez",
             "materias": []
         }
     ]

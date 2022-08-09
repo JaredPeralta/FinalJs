@@ -6,6 +6,8 @@ import Home  from './Pages/Home';
 import EdicionEstudiante from './Pages/EdicionEstudiante';
 import CrearMateria from './Pages/CrearMateria';
 import EdicionMateria from './Pages/EdicionMateria';
+import VerMateria from './Pages/VerMateria';
+import ModificarNotas from './Pages/ModificarNotas';
 
 
 const App = () => {
@@ -18,6 +20,8 @@ const App = () => {
         <Route path="estudiantes/:id" element={<EdicionEstudiante/>} />
         <Route path="materias" element={<CrearMateria/>} />
         <Route path="materias/:id" element={<EdicionMateria/>} />
+        <Route path="materias/ver/:id" element={<VerMateria/>} />
+        <Route path="materias/modificar/:idMateria/:idEstudiante" element={<ModificarNotas/>} />
       </Routes>
     </div>
   );

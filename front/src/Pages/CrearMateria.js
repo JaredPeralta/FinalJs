@@ -91,6 +91,7 @@ const CrearMateria = () => {
                     )
                   })}</td>
                   <td>
+                    <Link to={{ pathname: `/materias/ver/${materia.id}` }}><button>Ver materia</button></Link>
                     <Link to={{ pathname: `/materias/${materia.id}` }}><button>Editar</button></Link>
                     <button onClick={() => handleDelete(materia.id)}>Eliminar</button>
                   </td>

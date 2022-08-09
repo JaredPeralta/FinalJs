@@ -9,7 +9,7 @@ const EdicionEstudiante = () => {
   const [apellido, setApellido] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/estudiante?codigo=${params.id}`)
+    fetch(`http://localhost:5000/api/materia?codigo=${params.id}`)
       .then(res => res.json())
       .then(data => {
         setName(data.nombre);

@@ -12,7 +12,7 @@ router.get("/", (req, res)=>{
 // Rutas Estudiantes
 router.get("/mestudiante", controlador.mostrarEstudiantes)
 router.post("/estudiante", controlador.crearEstudiante)
-router.get("/estudiante", controlador.buscarEstudiantes) //Falta este
+router.get("/estudiante", controlador.buscarEstudiantes)
 router.put("/estudiante", controlador.actualizarEstudiante)
 router.delete("/estudiante", controlador.eliminarEstudiante)
 
@@ -21,5 +21,9 @@ router.get("/mmaterias", controlador.mostrarMaterias)
 router.post("/materia", controlador.crearMateria)
 router.put("/materia", controlador.actualizarMateria)
 router.delete("/materia", controlador.eliminarMateria)
+router.get("/materia", controlador.buscarMateria)
+router.post("/aemateria", controlador.agregarEstudianteMateria)
+router.delete("/eemateria", controlador.eliminarEstudianteMateria)
+router.put("/mnemateria", controlador.actualizarNotasEstudiante)
 
 module.exports = router
