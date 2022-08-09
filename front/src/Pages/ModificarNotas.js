@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom'
+import NavBar from "../Components/NavBar/NavBar";
+import { Button } from "react-bootstrap";
 
 const ModificarNotas = () => {
   const idMateria = parseInt(useParams().idMateria);
@@ -10,6 +12,8 @@ const ModificarNotas = () => {
   const [nota2, setNota2] = useState('');
   const [nota3, setNota3] = useState('');
   const [notaLab, setNotaLab] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/materia?id=${idMateria}`)
@@ -88,10 +92,13 @@ const ModificarNotas = () => {
           'Content-Type': 'application/json'
         }
       })
+
+      navigate(`/materias/ver/${idMateria}`)
   }
 
   return (
     <div>
+      <NavBar />
       {materia ?
         materia.estudiantesInscritos.map(estudiante => {
           if (estudiante.codigo === idEstudiante) {
@@ -110,7 +117,7 @@ const ModificarNotas = () => {
                     <p>Nota 3: <input value={nota3 ? nota3 : estudiante.nota3} onChange={handleChangeNota3}></input></p>
                     <p>Nota Lab: <input value={notaLab ? notaLab : estudiante.notaLab} onChange={handleChangeNotaLab}></input></p>
                   </>}
-                <button onClick={handleChangeNotas}>Modificar Notas</button>
+                <Button onClick={handleChangeNotas}>Modificar Notas</Button>
               </div>
             )
           }

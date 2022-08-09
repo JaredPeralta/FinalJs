@@ -1,0 +1,8 @@
+a:link, a:visited, a:active {
+    text-decoration:none;
+}
+
+.me-auto {
+    display: flex;
+    justify-content: space-around;
+}

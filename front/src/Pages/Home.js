@@ -1,6 +1,6 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
+import NavBar from '../Components/NavBar/NavBar'
+import { Button } from 'react-bootstrap';
 
 const Home = () => {
   const handleCargarDatos = () => {
@@ -14,15 +14,15 @@ const Home = () => {
       .then(data => {
         console.log(data);
       });
+    alert('Datos cargados');
   }
 
   return (
     <div>
-      <h3>Administrador de Estudiantes</h3>
-      <Link to="/estudiantes"><button>Estudiantes</button></Link>
-      <h3>Administrador de Materias</h3>
-      <Link to="/materias"><button>Materias</button></Link>
-      <button onClick={handleCargarDatos}>Cargar Datos</button>
+      <NavBar />
+      <h1>Bienvenido</h1>
+      <h5>Puede moverse con las opciones de la barra de navegacion para acceder al archivo predeterminado o cargar uno haciendo click en el boton "Cargar Datos"</h5>
+      <Button onClick={handleCargarDatos}>Cargar Datos</Button>
     </div>
   )
 }

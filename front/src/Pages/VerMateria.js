@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { Button , Table } from 'react-bootstrap';
+import NavBar from '../Components/NavBar/NavBar';
 
 const VerMateria = () => {
   let params = useParams();
@@ -51,43 +53,60 @@ const VerMateria = () => {
 
   const addEstudiante = () => {
     if (notaLab === '') {
-      fetch('http://localhost:5000/api/aemateria', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          codigoMateria: parseInt(params.id),
-          codigo: parseInt(id),
-          nota1: parseFloat(nota1),
-          nota2: parseFloat(nota2),
-          nota3: parseFloat(nota3),
-          info: "t"
+      if (id === '' || nota1 === '' || nota2 === '' || nota3 === '') {
+        alert('Debe ingresar todos los datos');
+      }else{
+        fetch('http://localhost:5000/api/aemateria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            codigoMateria: parseInt(params.id),
+            codigo: parseInt(id),
+            nota1: parseFloat(nota1),
+            nota2: parseFloat(nota2),
+            nota3: parseFloat(nota3),
+            info: "t"
+          })
         })
-      })
-    } else {
-      fetch('http://localhost:5000/api/aemateria', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          codigoMateria: parseInt(params.id),
-          codigo: parseInt(id),
-          nota1: parseFloat(nota1),
-          nota2: parseFloat(nota2),
-          nota3: parseFloat(nota3),
-          notaLab: parseFloat(notaLab),
-          info: "tp"
+
+        fetch('http://localhost:5000/api/promedioestudiante', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
         })
-      })
-    }
-    fetch('http://localhost:5000/api/promedioestudiante', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
+        window.location.reload();
       }
-    })
+    } else {
+      if (id === '' || nota1 === '' || nota2 === '' || nota3 === '' || notaLab === '') {
+        alert('Debe ingresar todos los datos');
+      }else{
+        fetch('http://localhost:5000/api/aemateria', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            codigoMateria: parseInt(params.id),
+            codigo: parseInt(id),
+            nota1: parseFloat(nota1),
+            nota2: parseFloat(nota2),
+            nota3: parseFloat(nota3),
+            notaLab: parseFloat(notaLab),
+            info: "tp"
+          })
+        })
+        fetch('http://localhost:5000/api/promedioestudiante', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        window.location.reload();
+      }
+    }
   }
 
   const handleDelete = (id) => {
@@ -112,15 +131,24 @@ const VerMateria = () => {
   }
 
   const handleMostrarEstMenor3 = () => {
-    setMostrarEst3(true);
+    if (mostrarEst3 === false) {
+      setMostrarEst3(true);
+    } else {
+      setMostrarEst3(false);
+    }
   }
 
   const handleMostrarEstMejorNota = () => {
-    setMostrarEstMejorNota(true);
+    if (mostrarEstMejorNota === false) {
+      setMostrarEstMejorNota(true);
+    }else {
+      setMostrarEstMejorNota(false);
+    }
   }
 
   return (
     <div>
+      <NavBar />
       <p>Id estudiante: <input onChange={handleChangeId}></input></p>
       {materia.tipo === "t" ?
         <>
@@ -134,8 +162,8 @@ const VerMateria = () => {
           <p>Nota 3: <input onChange={handleChangeNota3}></input></p>
           <p>Nota Lab: <input onChange={handleChangeNotaLab}></input></p>
         </>}
-      <button onClick={addEstudiante}>Agregar Estudiante a Materia</button>
-      <table border="1">
+      <Button onClick={addEstudiante}>Agregar Estudiante a Materia</Button>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th colSpan="6">Nombre Materia: {materia.nombre} </th>
@@ -185,75 +213,80 @@ const VerMateria = () => {
                     })}
                   </td>
                   <td>
-                    <Link to={{ pathname: `/materias/modificar/${materia.id}/${estudiante.codigo}` }}><button>Modificar Notas</button></Link>
-                    <button onClick={() => handleDelete(estudiante.codigo)}>Eliminar</button>
+                    <Link to={{ pathname: `/materias/modificar/${materia.id}/${estudiante.codigo}` }}><Button variant="outline-warning">Modificar Notas</Button></Link>
+                    <Button variant="outline-danger" onClick={() => handleDelete(estudiante.codigo)}>Eliminar</Button>
                   </td>
                 </tr>
               );
             })
             : <h1>Cargando...</h1>}
         </tbody>
-      </table>
+      </Table>
       <br/>
       <br/>
-      <button onClick={handleMostrarEstMenor3}>Mostrar Estudiantes con nota menor a 3.0</button>
-      <table border="1">
-        <thead>
-          <tr>
-            <th colSpan="4">Estudiantes con nota menor a 3.0</th>
-          </tr>
-          <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Nota Final</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mostrarEst3 ?
-            estMenor3.map(estudiante => {
-              return (
-                <tr key={estudiante.codigo}>
-                  <td>{estudiante.codigo}</td>
-                  <td>{estudiante.nombre}</td>
-                  <td>{estudiante.apellido}</td>
-                  <td>{estudiante.notaFinal}</td>
-                </tr>
-              )
-            })
-            : null}
-        </tbody>
-      </table>
+      <Button onClick={handleMostrarEstMenor3}>Mostrar Estudiantes con nota menor a 3.0</Button>
+      {mostrarEst3 ?
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th colSpan="4">Estudiantes con nota menor a 3.0</th>
+            </tr>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Nota Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            {estMenor3 ?
+              estMenor3.map(estudiante => {
+                return(
+                  <tr key={estudiante.codigo}>
+                    <td>{estudiante.codigo}</td>
+                    <td>{estudiante.nombre}</td>
+                    <td>{estudiante.apellido}</td>
+                    <td>{estudiante.notaFinal}</td>
+                  </tr>
+                )
+              })
+              : <h1>Cargando...</h1>}
+              
+          </tbody>
+        </Table> 
+        : null}
       <br/>
       <br/>
-      <button onClick={handleMostrarEstMejorNota}>Estudiantes ordenados por mejor nota</button>
-      <table border="1">
-        <thead>
-          <tr>
-            <th colSpan="4">Estudiantes ordenados por mejor nota</th>
-          </tr>
-          <tr>
-            <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Nota Final</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mostrarEstMejorNota ?
-            estMejorNota.map(estudiante => {
-              return (
-                <tr key={estudiante.codigo}>
-                  <td>{estudiante.codigo}</td>
-                  <td>{estudiante.nombre}</td>
-                  <td>{estudiante.apellido}</td>
-                  <td>{estudiante.notaFinal}</td>
-                </tr>
-              )
-            })
-            : null}
-        </tbody>
-      </table>
+      <Button onClick={handleMostrarEstMejorNota}>Estudiantes ordenados por mejor nota</Button>
+      {mostrarEstMejorNota ?
+        <Table striped bordered hover size="sm">
+          <thead>
+            <tr>
+              <th colSpan="4">Estudiantes ordenados por mejor nota</th>
+            </tr>
+            <tr>
+              <th>Id</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Nota Final</th>
+            </tr>
+          </thead>
+          <tbody>
+            {estMejorNota ?
+              estMejorNota.map(estudiante => {
+                return (
+                  <tr key={estudiante.codigo}>
+                    <td>{estudiante.codigo}</td>
+                    <td>{estudiante.nombre}</td>
+                    <td>{estudiante.apellido}</td>
+                    <td>{estudiante.notaFinal}</td>
+                  </tr>
+                )
+              })
+            : <h1>Cargando...</h1>}
+          </tbody>
+        </Table>
+      : null}
     </div>
   );
 }
